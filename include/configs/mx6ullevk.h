@@ -29,6 +29,9 @@
 	"ipaddr=10.10.0.221\0" \
 	"serverip=10.10.0.201\0" \
 	"gatewayip=10.10.0.101\0" \
+    "dl_zImage=tftp 0x82000000 zImage; setenv zImage_size ${filesize}; fatwrite mmc ${mmcdev}:${mmcpart} 0x82000000 /zImage ${zImage_size}; echo update zImage ok.\0" \
+    "dl_fdt=tftp 0x83000000 ${fdt_file}; setenv fdt_size ${filesize}; fatwrite mmc ${mmcdev}:${mmcpart} 0x83000000 /${fdt_file} ${fdt_size}; echo update fdt ok.\0" \
+    "dk=run findfdt; mmc dev ${mmcdev}; run dl_zImage; run dl_fdt\0" \
 	"script=boot.scr\0" \
 	"image=zImage\0" \
 	"console=ttymxc0\0" \
