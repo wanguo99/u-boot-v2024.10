@@ -24,14 +24,6 @@
 #endif
 
 #define CFG_EXTRA_ENV_SETTINGS \
-	"ethaddr=00:11:22:33:44:55\0" \
-	"eth1addr=00:11:22:33:44:55\0" \
-	"ipaddr=10.10.0.221\0" \
-	"serverip=10.10.0.201\0" \
-	"gatewayip=10.10.0.101\0" \
-    "dl_zImage=tftp 0x82000000 zImage; setenv zImage_size ${filesize}; fatwrite mmc ${mmcdev}:${mmcpart} 0x82000000 /zImage ${zImage_size}; echo update zImage ok.\0" \
-    "dl_fdt=tftp 0x83000000 ${fdt_file}; setenv fdt_size ${filesize}; fatwrite mmc ${mmcdev}:${mmcpart} 0x83000000 /${fdt_file} ${fdt_size}; echo update fdt ok.\0" \
-    "dk=run findfdt; mmc dev ${mmcdev}; run dl_zImage; run dl_fdt\0" \
 	"script=boot.scr\0" \
 	"image=zImage\0" \
 	"console=ttymxc0\0" \
@@ -103,6 +95,25 @@
 		"else " \
 			"bootz; " \
 		"fi;\0" \
+	"ethaddr=00:11:22:33:44:55\0" \
+	"eth1addr=01:11:22:33:44:55\0" \
+	"ipaddr=10.10.0.221\0" \
+	"serverip=10.10.0.201\0" \
+	"gatewayip=10.10.0.101\0" \
+	"zImage_addr=0x82000000\0" \
+	"dl_zImage=tftp ${zImage_addr} zImage; echo Download zImage ok.\0" \
+	"dl_fdt=tftp ${fdt_addr} ${fdt_file}; echo Download ${fdt_file} ok.\0" \
+	"update_zImage=run dl_zImage;" \
+		"fatwrite mmc ${mmcdev}:${mmcpart} ${zimage_addr} /zImage ${filesize};" \
+		"echo update zImage ok.\0" \
+	"update_fdt=run dl_fdt;"\
+		"fatwrite mmc ${mmcdev}:${mmcpart} ${fdt_addr} /${fdt_file} ${filesize};" \
+		"echo update fdt ok.\0" \
+	"dk=run findfdt; mmc dev ${mmcdev}; run update_zImage; run update_fdt\0" \
+	"sdroot=/dev/mmcblk0p2 rootwait rw\0" \
+	"sdargs=setenv bootargs console=${console},${baudrate} root=${sdroot}\0" \
+	"sdboot=echo Booting from sd card ...;" \
+	"run sdargs; run dl_zImage; run dl_fdt; bootz ${zImage_addr} - ${fdt_addr}\0"
 
 /* Miscellaneous configurable options */
 
