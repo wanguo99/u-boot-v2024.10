@@ -24,15 +24,20 @@
 #endif
 
 #define CFG_EXTRA_ENV_SETTINGS \
+	"ethaddr=00:11:22:33:44:55\0" \
+	"eth1addr=00:11:22:33:44:55\0" \
+	"ipaddr=10.10.0.221\0" \
+	"serverip=10.10.0.201\0" \
+	"gatewayip=10.10.0.101\0" \
 	"script=boot.scr\0" \
 	"image=zImage\0" \
 	"console=ttymxc0\0" \
 	"fdt_high=0xffffffff\0" \
 	"initrd_high=0xffffffff\0" \
-	"fdt_file=undefined\0" \
+	"fdt_file=imx6ull-14x14-evk.dtb\0" \
 	"fdt_addr=0x83000000\0" \
 	"boot_fdt=try\0" \
-	"ip_dyn=yes\0" \
+	"ip_dyn=no\0" \
 	"videomode=video=ctfb:x:480,y:272,depth:24,pclk:108695,le:8,ri:4,up:2,lo:4,hs:41,vs:10,sync:0,vmode:0\0" \
 	"mmcdev="__stringify(CONFIG_SYS_MMC_ENV_DEV)"\0" \
 	"mmcpart=1\0" \
