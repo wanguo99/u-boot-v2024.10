@@ -25,24 +25,15 @@
 
 /* user env Configs */
 #define CFG_EXTRA_USER_ENV_SETTINGS \
-	"sddev=0\0" \
-	"sdpart=1\0" \
-	"dl_kernel=tftp ${loadaddr} ${image}; echo Download ${image} ok.\0" \
-	"dl_fdt=tftp ${fdt_addr} ${fdt_file}; echo Download ${fdt_file} ok.\0" \
-	"update_zImage=run dl_kernel;" \
-		"fatwrite mmc ${sddev}:${sdpart} ${loadaddr} ${image} ${filesize};" \
-		"echo update kernel ok.\0" \
-	"update_fdt=run dl_fdt;"\
-		"fatwrite mmc ${sddev}:${sdpart} ${fdt_addr} ${fdt_file} ${filesize};" \
-		"echo update fdt ok.\0" \
-	"dk=run findfdt; mmc dev ${sddev}; run update_zImage; run update_fdt\0" \
-	"sdroot=/dev/mmcblk0p2 rootwait rw\0" \
-	"sdargs=setenv bootargs console=${console},${baudrate} root=${sdroot}\0" \
-	"boot_with_tftp=yes\0" \
 	"emmcboot=echo Booting from eMMC Card ...; " \
 		"mmc dev ${mmcdev}; run mmcargs; " \
 		"run findfdt; run loadfdt; run loadimage; " \
 		"bootz ${loadaddr} - ${fdt_addr};\0" \
+	"boot_with_tftp=1\0" \
+	"sddev=0\0" \
+	"sdpart=1\0" \
+	"sdroot=/dev/mmcblk0p2 rootwait rw\0" \
+	"sdargs=setenv bootargs console=${console},${baudrate} root=${sdroot}\0" \
 	"sdboot=echo Booting from SD Card ...; " \
 		"mmc dev ${sddev}; run sdargs; " \
 		"if test ${boot_with_tftp} = 1; then " \
@@ -53,7 +44,20 @@
 			"run findfdt; run loadfdt; run loadimage; " \
 		"fi; " \
 		"bootz ${loadaddr} - ${fdt_addr};\0" \
-
+	"dl_kernel=tftp ${loadaddr} ${image}; tftp ${fdt_addr} ${fdt_file};\0" \
+	"dk=mmc dev ${sddev}; run findfdt; run dl_kernel; " \
+		"fatwrite mmc ${sddev}:${sdpart} ${loadaddr} ${image} ${filesize}; " \
+		"echo update kernel ok; " \
+		"fatwrite mmc ${sddev}:${sdpart} ${fdt_addr} ${fdt_file} ${filesize}; " \
+		"echo update fdt ok;\0" \
+	"uboot_file=u-boot-dtb.imx\0" \
+	"uboot_addr=0x84000000\0" \
+	"boot_start_sector=16384\0" \
+	"sector_size=0x200\0" \
+	"du=tftp ${uboot_addr} ${uboot_file}; " \
+		"setexpr file_sectors ${filesize} / ${sector_size}; " \
+		"mmc write ${uboot_addr} ${boot_start_sector} ${file_sectors}; " \
+		"echo Update U-Boot OK.\0"
 
 #define CFG_EXTRA_ENV_SETTINGS \
 	"script=boot.scr\0" \
