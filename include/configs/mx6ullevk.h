@@ -25,11 +25,6 @@
 
 /* user env Configs */
 #define CFG_EXTRA_USER_ENV_SETTINGS \
-	"ethaddr=00:11:22:33:44:55\0" \
-	"eth1addr=01:11:22:33:44:55\0" \
-	"ipaddr=10.10.0.221\0" \
-	"gatewayip=10.10.0.101\0" \
-	"serverip=10.10.0.201\0" \
 	"sddev=0\0" \
 	"sdpart=1\0" \
 	"dl_kernel=tftp ${loadaddr} ${image}; echo Download ${image} ok.\0" \
