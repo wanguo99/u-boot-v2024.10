@@ -64,6 +64,7 @@
 			"run download_file; if test $? -ne 0; then exit 1; fi; " \
 		"else " \
 			"echo Load kernel image from SD Card...; " \
+			"setenv mmcdev ${sddev}; " \
 			"run loadfdt; if test $? -ne 0; then echo Error: Loading FDT failed; exit 1; fi; " \
 			"run loadimage; if test $? -ne 0; then echo Error: Loading kernel image failed; exit 1; fi; " \
 		"fi; " \
