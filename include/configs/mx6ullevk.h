@@ -28,12 +28,12 @@
 	"tftp_kernel=1\0" \
 	"sector_size=0x200\0" \
 	"update_file=sdcard.img\0" \
+	"set_file_sectors=setexpr temp ${filesize} + ${sector_size}; setexpr temp ${temp} - 1; " \
+		"setexpr file_sectors ${temp} / ${sector_size};\0" \
 	"download_file=tftp ${dl_addr} ${dl_file}; " \
 		"if test $? -ne 0; then echo Error: Download ${dl_file} failed.; exit 1; fi; " \
 		"echo Download ${dl_file} OK.; " \
-		"setexpr temp ${filesize} + ${sector_size}; setexpr temp ${temp} - 1; " \
-		"if test ${sector_size} -lt ${temp}; then setexpr file_sectors ${temp} / ${sector_size}; " \
-		"else setenv file_sectors 1; fi; \0" \
+		"run set_file_sectors; \0" \
 	"write_file_to_mmc=mmc dev ${sddev}; " \
 		"if test $? -ne 0; then echo Error: MMC device selection failed.; exit 1; fi; " \
 		"mmc write ${write_addr} ${write_offset} ${file_sectors}; " \
